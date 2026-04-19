@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Orator Docs — Oracle Code Generator</title>
+  <title>Orator Docs: Oracle Code Generator</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56'%3E%3Ccircle cx='28' cy='28' r='24' stroke='%23C8392B' stroke-width='3' stroke-dasharray='128 22' stroke-dashoffset='-8' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='28' cy='28' r='11' fill='none' stroke='%231A1410' stroke-width='2.5'/%3E%3Cline x1='28' y1='17' x2='28' y2='39' stroke='%23C8392B' stroke-width='3' stroke-linecap='round'/%3E%3Cline x1='28' y1='4' x2='28' y2='10' stroke='%23C8392B' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -471,22 +471,22 @@
       <!-- ── What is Orator ── -->
       <section class="doc-section" id="what-is-orator">
         <h1>What is Orator?</h1>
-        <p class="lead">Orator is an AI-powered code generator for Charli3 pull oracles on Cardano. Describe your oracle use case in plain English — get production-ready on-chain validators, off-chain integrations, and test suites in seconds.</p>
+        <p class="lead">Orator is an AI-powered code generator for Charli3 pull oracles on Cardano. Describe your oracle use case in plain English and get production-ready on-chain validators, off-chain integrations, and test suites in seconds.</p>
 
         <div class="callout callout-tip">
           <strong>The core idea</strong>
-          Writing a Charli3 oracle integration from scratch takes days — you need to know Aiken or Plutus, understand the SDK, handle timestamp validation, fee estimation, and proof verification. Orator handles all of that from a single sentence.
+          Writing a Charli3 oracle integration from scratch takes days. You need to know Aiken or Plutus, understand the SDK, handle timestamp validation, fee estimation, and proof verification. Orator handles all of that from a single sentence.
         </div>
 
         <h2>Why it exists</h2>
-        <p>Charli3 is Cardano's native oracle network — but integrating with it requires deep protocol knowledge. Most developers who want to build DeFi liquidators, parametric insurance contracts, or prediction markets get blocked at the oracle layer before they've written a line of application logic.</p>
-        <p>Orator removes that blocker. You describe what you want to build, and Orator generates the entire oracle integration — correctly structured, with all the patterns Charli3 requires baked in.</p>
+        <p>Charli3 is Cardano's native oracle network. Integrating with it requires deep protocol knowledge, and most developers who want to build DeFi liquidators, parametric insurance contracts, or prediction markets get blocked at the oracle layer before they've written a line of application logic.</p>
+        <p>Orator removes that blocker. You describe what you want to build, and Orator generates the entire oracle integration, correctly structured with all the patterns Charli3 requires baked in.</p>
 
         <h2>What Orator is not</h2>
         <ul>
-          <li>It is <strong>not a deployment tool</strong> — it generates code, you deploy it.</li>
-          <li>It is <strong>not a replacement for code review</strong> — always read and test generated output before deploying to mainnet.</li>
-          <li>It is <strong>not a Charli3 node</strong> — it generates the client-side integration code that talks to the Charli3 network.</li>
+          <li>It is <strong>not a deployment tool.</strong> It generates code; you deploy it.</li>
+          <li>It is <strong>not a replacement for code review.</strong> Always read and test generated output before deploying to mainnet.</li>
+          <li>It is <strong>not a Charli3 node.</strong> It generates the client-side integration code that talks to the Charli3 network.</li>
         </ul>
       </section>
 
@@ -530,7 +530,7 @@
             <div class="step-num">5</div>
             <div class="step-body">
               <h4>Generate &amp; Copy</h4>
-              <p>Hit <strong>Generate Oracle Code</strong>. Three code blocks appear — copy each one into your project with the Copy button.</p>
+              <p>Hit <strong>Generate Oracle Code</strong>. Three code blocks appear. Copy each one into your project with the Copy button.</p>
             </div>
           </div>
         </div>
@@ -552,7 +552,7 @@ user's collateral ratio falls below 120%.</pre>
       <!-- ── How It Works ── -->
       <section class="doc-section" id="how-it-works">
         <h1>How It Works</h1>
-        <p>Orator sends your use case description to a large language model (LLaMA 3.3 70B via Groq) with a detailed system prompt encoding the exact mechanics of Charli3 pull oracles. The API key is stored server-side — your browser never touches it.</p>
+        <p>Orator sends your use case description to a large language model (LLaMA 3.3 70B via Groq) with a detailed system prompt encoding the exact mechanics of Charli3 pull oracles. The API key is stored server-side. Your browser never touches it.</p>
 
         <div class="code-block">
           <div class="code-block-top"><span class="code-lang">Request flow</span></div>
@@ -565,12 +565,12 @@ user's collateral ratio falls below 120%.</pre>
         <h2>What the AI knows about Charli3</h2>
         <p>The system prompt encodes these Charli3-specific facts so the generated code is always correct:</p>
         <ul>
-          <li><strong>Pull model</strong> — contract submits an on-chain request; oracle nodes respond with signed data</li>
-          <li><strong>Response payload</strong> — price/data + Unix timestamp + multi-node Ed25519 signature proof</li>
-          <li><strong>Fee</strong> — 2–5 ADA per pull depending on freshness SLA</li>
-          <li><strong>SDK</strong> — <code>charli3-pull-oracle-sdk</code> handles request building, fee estimation, response parsing</li>
-          <li><strong>Staleness rule</strong> — reject oracle responses older than 60 seconds</li>
-          <li><strong>Timeout pattern</strong> — if no oracle response within 5 minutes, trigger a refund path</li>
+          <li><strong>Pull model:</strong> contract submits an on-chain request; oracle nodes respond with signed data</li>
+          <li><strong>Response payload:</strong> price/data + Unix timestamp + multi-node Ed25519 signature proof</li>
+          <li><strong>Fee:</strong> 2 to 5 ADA per pull depending on freshness SLA</li>
+          <li><strong>SDK:</strong> <code>charli3-pull-oracle-sdk</code> handles request building, fee estimation, response parsing</li>
+          <li><strong>Staleness rule:</strong> reject oracle responses older than 60 seconds</li>
+          <li><strong>Timeout pattern:</strong> if no oracle response within 5 minutes, trigger a refund path</li>
         </ul>
       </section>
 
@@ -661,15 +661,15 @@ user's collateral ratio falls below 120%.</pre>
         <h3>Asset / Data Feed</h3>
         <p>The specific data you want to pull from Charli3. Examples:</p>
         <ul>
-          <li><code>ADA/USD</code> — ADA price in US dollars</li>
-          <li><code>BTC/USD</code> — Bitcoin price</li>
-          <li><code>ETH/ADA</code> — cross-pair</li>
-          <li><code>Temperature</code> — weather data</li>
-          <li><code>Flight AA123</code> — flight status</li>
+          <li><code>ADA/USD</code>: ADA price in US dollars</li>
+          <li><code>BTC/USD</code>: Bitcoin price</li>
+          <li><code>ETH/ADA</code>: cross pair</li>
+          <li><code>Temperature</code>: weather data</li>
+          <li><code>Flight AA123</code>: flight status</li>
         </ul>
 
         <h3>Framework</h3>
-        <p><strong>Aiken</strong> is recommended for new projects — it's the modern, purpose-built language for Cardano validators with a clean syntax and fast compiler. <strong>Plutus / Haskell</strong> is for teams already working in Haskell. <strong>Either — you decide</strong> lets the AI choose based on your description.</p>
+        <p><strong>Aiken</strong> is recommended for new projects. It is the modern, purpose-built language for Cardano validators with a clean syntax and fast compiler. <strong>Plutus / Haskell</strong> is for teams already working in Haskell. <strong>Either (you decide)</strong> lets the AI choose based on your description.</p>
 
         <h3>Description</h3>
         <p>Plain-English description of what your contract should do. Include:</p>
@@ -709,11 +709,11 @@ user's collateral ratio falls below 120%.</pre>
         <h2>What's always included</h2>
         <p>Regardless of use case, every generated validator includes:</p>
         <ul>
-          <li><strong>Timestamp validation</strong> — rejects oracle data older than 60 seconds</li>
-          <li><strong>Fee estimation</strong> — calculates and attaches the correct 2–5 ADA oracle fee</li>
-          <li><strong>Timeout handling</strong> — refund path if no oracle response within 5 minutes</li>
-          <li><strong>Multi-node proof verification</strong> — confirms the oracle response is signed by the required number of Charli3 nodes</li>
-          <li><strong>Inline comments</strong> — every non-obvious line is explained</li>
+          <li><strong>Timestamp validation:</strong> rejects oracle data older than 60 seconds</li>
+          <li><strong>Fee estimation:</strong> calculates and attaches the correct 2 to 5 ADA oracle fee</li>
+          <li><strong>Timeout handling:</strong> refund path if no oracle response within 5 minutes</li>
+          <li><strong>Multi-node proof verification:</strong> confirms the oracle response is signed by the required number of Charli3 nodes</li>
+          <li><strong>Inline comments:</strong> every non-obvious line is explained</li>
         </ul>
       </section>
 
@@ -769,15 +769,15 @@ user's collateral ratio falls below 120%.</pre>
       <!-- ── Oracle Basics ── -->
       <section class="doc-section" id="oracle-basics">
         <h1>Oracle Basics</h1>
-        <p>Blockchains are intentionally isolated — a smart contract cannot fetch data from the internet. This is what makes them trustless and tamper-proof. But it creates a fundamental limitation: contracts cannot act on real-world events without a trusted data bridge.</p>
+        <p>Blockchains are intentionally isolated. A smart contract cannot fetch data from the internet. This is what makes them trustless and tamper-proof, but it creates a fundamental limitation: contracts cannot act on real-world events without a trusted data bridge.</p>
         <p>An <strong>oracle</strong> is that bridge. It fetches real-world data (prices, weather, sports scores, flight statuses), verifies it through consensus, and posts it on-chain in a format smart contracts can read and trust.</p>
 
         <h2>Without oracles</h2>
         <ul>
-          <li>A DeFi lending protocol cannot liquidate undercollateralised positions — it can't know the asset price.</li>
-          <li>A stablecoin cannot maintain its peg — it can't verify its own price.</li>
-          <li>A parametric insurance contract cannot pay out — it can't verify the triggering event happened.</li>
-          <li>A prediction market cannot settle — it can't verify the real-world outcome.</li>
+          <li>A DeFi lending protocol cannot liquidate undercollateralised positions. It cannot know the asset price.</li>
+          <li>A stablecoin cannot maintain its peg. It cannot verify its own price.</li>
+          <li>A parametric insurance contract cannot pay out. It cannot verify the triggering event happened.</li>
+          <li>A prediction market cannot settle. It cannot verify the real-world outcome.</li>
         </ul>
         <p>Oracles are what make any real-world connected DeFi primitive possible.</p>
       </section>
@@ -787,7 +787,7 @@ user's collateral ratio falls below 120%.</pre>
       <!-- ── Charli3 Pull Model ── -->
       <section class="doc-section" id="charli3-model">
         <h1>Charli3 Pull Model</h1>
-        <p>Charli3 is Cardano's native oracle network. Unlike push oracles that post data on-chain continuously, Charli3 uses a <strong>pull model</strong> — data is fetched on demand, when your contract requests it.</p>
+        <p>Charli3 is Cardano's native oracle network. Unlike push oracles that post data on-chain continuously, Charli3 uses a <strong>pull model</strong>. Data is fetched on demand, when your contract requests it.</p>
 
         <h2>How a pull works</h2>
         <div class="code-block">
@@ -804,11 +804,11 @@ user's collateral ratio falls below 120%.</pre>
 
         <h2>Key properties</h2>
         <ul>
-          <li><strong>On-demand</strong> — you only pay when you actually need data</li>
-          <li><strong>Multi-node signed</strong> — requires consensus from multiple independent nodes, so no single point of failure or manipulation</li>
-          <li><strong>Timestamp-bound</strong> — every response includes a Unix timestamp; stale data (over 60 seconds) should be rejected</li>
-          <li><strong>Fee: 2–5 ADA per pull</strong> — exact amount depends on the freshness SLA you request</li>
-          <li><strong>Timeout-safe</strong> — if no response within 5 minutes, your contract should provide a refund path</li>
+          <li><strong>On demand:</strong> you only pay when you actually need data</li>
+          <li><strong>Multi-node signed:</strong> requires consensus from multiple independent nodes, so no single point of failure or manipulation</li>
+          <li><strong>Timestamp bound:</strong> every response includes a Unix timestamp; stale data (over 60 seconds) should be rejected</li>
+          <li><strong>Fee 2 to 5 ADA per pull:</strong> exact amount depends on the freshness SLA you request</li>
+          <li><strong>Timeout safe:</strong> if no response within 5 minutes, your contract should provide a refund path</li>
         </ul>
       </section>
 
@@ -820,29 +820,29 @@ user's collateral ratio falls below 120%.</pre>
 
         <div class="callout callout-tip">
           <strong>Short answer</strong>
-          The same way you trust any AI-generated code — you read it, run the tests, and review it before deploying. Orator gives you a correct starting point, not a black box.
+          The same way you trust any AI-generated code. You read it, run the tests, and review it before deploying. Orator gives you a correct starting point, not a black box.
         </div>
 
         <h2>Why the output is trustworthy as a starting point</h2>
         <ul>
-          <li><strong>Fully transparent</strong> — every line is visible and readable. Nothing is hidden or compiled.</li>
-          <li><strong>Grounded in Charli3 mechanics</strong> — the AI is given precise, verified facts about the protocol (fees, timestamp rules, proof format, SDK methods) before it generates anything.</li>
-          <li><strong>Tests are included</strong> — a test suite ships with every generation specifically so you can verify behaviour before deployment.</li>
-          <li><strong>Inline comments</strong> — every non-obvious decision in the code is explained so reviewers know why each pattern was used.</li>
+          <li><strong>Fully transparent:</strong> every line is visible and readable. Nothing is hidden or compiled.</li>
+          <li><strong>Grounded in Charli3 mechanics:</strong> the AI is given precise, verified facts about the protocol (fees, timestamp rules, proof format, SDK methods) before it generates anything.</li>
+          <li><strong>Tests are included:</strong> a test suite ships with every generation specifically so you can verify behaviour before deployment.</li>
+          <li><strong>Inline comments:</strong> every non-obvious decision in the code is explained so reviewers know why each pattern was used.</li>
         </ul>
 
         <h2>Your responsibilities before deploying</h2>
         <ul>
-          <li>Read all three generated blocks — understand what each line does.</li>
-          <li>Run the test suite — ensure the mock oracle flow passes.</li>
-          <li>Deploy to Preprod first — exercise the full oracle request/response cycle on testnet.</li>
-          <li>Audit your business logic — Orator handles oracle plumbing; you are responsible for your contract's economic logic.</li>
-          <li>Security review — for high-value contracts, engage a Cardano smart contract auditor before mainnet.</li>
+          <li>Read all three generated blocks and understand what each line does.</li>
+          <li>Run the test suite and ensure the mock oracle flow passes.</li>
+          <li>Deploy to Preprod first and exercise the full oracle request/response cycle on testnet.</li>
+          <li>Audit your business logic. Orator handles oracle plumbing; you are responsible for your contract's economic logic.</li>
+          <li>For high-value contracts, engage a Cardano smart contract auditor before mainnet.</li>
         </ul>
 
         <div class="callout callout-warn">
           <strong>Never deploy to mainnet without testing</strong>
-          Oracle bugs can be catastrophic — wrong price data triggering mass liquidations, stale data allowing double-claims, missing timeout paths locking funds. Always test end-to-end on Preprod first.
+          Oracle bugs can be catastrophic. Wrong price data can trigger mass liquidations, stale data can allow double-claims, and missing timeout paths can lock funds permanently. Always test end to end on Preprod first.
         </div>
       </section>
 
@@ -857,12 +857,12 @@ user's collateral ratio falls below 120%.</pre>
             Is Orator free to use?
             <span class="arrow">▼</span>
           </div>
-          <div class="faq-a">Yes. Orator is completely free. The underlying LLM (LLaMA 3.3 70B via Groq) is served through a serverless proxy — you don't need an API key or account to generate code.</div>
+          <div class="faq-a">Yes. Orator is completely free. The underlying LLM (LLaMA 3.3 70B via Groq) is served through a serverless proxy. You don't need an API key or account to generate code.</div>
         </div>
 
         <div class="faq-item">
           <div class="faq-q" onclick="toggleFaq(this)">
-            What framework should I choose — Aiken or Plutus?
+            What framework should I choose: Aiken or Plutus?
             <span class="arrow">▼</span>
           </div>
           <div class="faq-a">Choose <strong>Aiken</strong> unless you have a specific reason not to. Aiken is purpose-built for Cardano, has a significantly friendlier syntax, compiles faster, and has better tooling for new projects. Plutus/Haskell is preferable only if your team is already working in an existing Haskell codebase.</div>
@@ -881,7 +881,7 @@ user's collateral ratio falls below 120%.</pre>
             The generated code has a bug. What do I do?
             <span class="arrow">▼</span>
           </div>
-          <div class="faq-a">Generate again with a more specific description — the more detail you provide about thresholds, edge cases, and conditions, the more precise the output. You can also modify the generated code directly; it's standard Aiken/TypeScript with comments explaining each section.</div>
+          <div class="faq-a">Generate again with a more specific description. The more detail you provide about thresholds, edge cases, and conditions, the more precise the output. You can also modify the generated code directly; it's standard Aiken/TypeScript with comments explaining each section.</div>
         </div>
 
         <div class="faq-item">
@@ -889,7 +889,7 @@ user's collateral ratio falls below 120%.</pre>
             Does Orator actually submit transactions to Cardano?
             <span class="arrow">▼</span>
           </div>
-          <div class="faq-a">No. Orator generates code — it does not execute it. All on-chain activity happens when you take the generated code, deploy it yourself using Aiken and Mesh.js, and run your own transactions. Orator has no wallet integration and never touches your ADA.</div>
+          <div class="faq-a">No. Orator generates code. It does not execute it. All on-chain activity happens when you take the generated code, deploy it yourself using Aiken and Mesh.js, and run your own transactions. Orator has no wallet integration and never touches your ADA.</div>
         </div>
 
         <div class="faq-item">
@@ -918,23 +918,23 @@ user's collateral ratio falls below 120%.</pre>
 
         <h2>Near-term</h2>
         <ul>
-          <li><strong>One-click Preprod deployment</strong> — connect a wallet and deploy directly from the generator UI without touching a terminal.</li>
-          <li><strong>Project scaffolding</strong> — generate a full Aiken project folder (aiken.toml, directory structure, package.json) instead of individual code blocks.</li>
-          <li><strong>VS Code extension</strong> — describe your oracle integration in a comment, get the code inserted inline.</li>
+          <li><strong>One-click Preprod deployment:</strong> connect a wallet and deploy directly from the generator UI without touching a terminal.</li>
+          <li><strong>Project scaffolding:</strong> generate a full Aiken project folder (aiken.toml, directory structure, package.json) instead of individual code blocks.</li>
+          <li><strong>VS Code extension:</strong> describe your oracle integration in a comment, get the code inserted inline.</li>
         </ul>
 
         <h2>Medium-term</h2>
         <ul>
-          <li><strong>Multi-oracle support</strong> — generate integrations for Orcfax and DIA alongside Charli3.</li>
-          <li><strong>Prompt-to-audit</strong> — paste your existing oracle integration and get a security review identifying common vulnerabilities.</li>
-          <li><strong>Community template library</strong> — verified, production-used oracle patterns contributed by the Cardano developer community.</li>
+          <li><strong>Multi-oracle support:</strong> generate integrations for Orcfax and DIA alongside Charli3.</li>
+          <li><strong>Prompt to audit:</strong> paste your existing oracle integration and get a security review identifying common vulnerabilities.</li>
+          <li><strong>Community template library:</strong> verified, production-used oracle patterns contributed by the Cardano developer community.</li>
         </ul>
 
         <h2>Long-term</h2>
         <ul>
-          <li><strong>AI agent integration</strong> — plug Orator into Masumi and other Cardano AI agent frameworks so autonomous agents can request oracle integrations programmatically.</li>
-          <li><strong>Oracle monitoring dashboard</strong> — track live oracle integrations, feed freshness, pull costs, and response time after deployment.</li>
-          <li><strong>Cross-chain generation</strong> — apply the same model to Ethereum (Chainlink), Solana (Pyth), and other oracle networks.</li>
+          <li><strong>AI agent integration:</strong> plug Orator into Masumi and other Cardano AI agent frameworks so autonomous agents can request oracle integrations programmatically.</li>
+          <li><strong>Oracle monitoring dashboard:</strong> track live oracle integrations, feed freshness, pull costs, and response time after deployment.</li>
+          <li><strong>Cross-chain generation:</strong> apply the same model to Ethereum (Chainlink), Solana (Pyth), and other oracle networks.</li>
         </ul>
       </section>
 
