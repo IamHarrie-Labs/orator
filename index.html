@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Orator — Charli3 Oracle Generator</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56'%3E%3Ccircle cx='28' cy='28' r='24' stroke='%23C8392B' stroke-width='3' stroke-dasharray='128 22' stroke-dashoffset='-8' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='28' cy='28' r='11' fill='none' stroke='%231A1410' stroke-width='2.5'/%3E%3Cline x1='28' y1='17' x2='28' y2='39' stroke='%23C8392B' stroke-width='3' stroke-linecap='round'/%3E%3Cline x1='28' y1='4' x2='28' y2='10' stroke='%23C8392B' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -338,76 +339,123 @@
     footer p { font-size: 13px; color: var(--subtle); }
 
     /* ── Generator Drawer ── */
-    .overlay {
+    /* ── Centered Modal ── */
+    .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(4px);
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.35s ease;
+      transition: opacity 0.3s ease;
     }
-    .overlay.open { opacity: 1; pointer-events: all; }
-
-    .drawer {
-      position: fixed;
-      top: 0; right: 0;
-      width: min(560px, 100vw);
-      height: 100vh;
-      background: #0d0d1a;
-      border-left: 1px solid rgba(167,139,250,0.15);
-      z-index: 201;
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: #0c0c12;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 18px;
+      width: min(1160px, 100%);
+      height: min(740px, 92vh);
       display: flex;
       flex-direction: column;
-      transform: translateX(100%);
-      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       overflow: hidden;
+      transform: scale(0.96) translateY(20px);
+      transition: transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(222,19,72,0.07);
     }
-    .drawer.open { transform: translateX(0); }
+    .modal-overlay.open .modal { transform: scale(1) translateY(0); }
 
-    .drawer-header {
+    .modal-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 24px 32px;
+      padding: 15px 24px;
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
     }
-    .drawer-title { font-size: 16px; font-weight: 700; letter-spacing: -0.2px; }
-    .drawer-close {
-      width: 32px; height: 32px;
+    .modal-title {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .modal-close {
+      width: 30px; height: 30px;
       display: flex; align-items: center; justify-content: center;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 8px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 14px;
       color: var(--muted);
       transition: all 0.2s;
     }
-    .drawer-close:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+    .modal-close:hover { color: var(--text); border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.07); }
 
-    .drawer-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 28px 32px;
+    .modal-body { display: flex; flex: 1; overflow: hidden; }
+
+    /* Left pane — form */
+    .modal-left {
+      width: 370px;
+      flex-shrink: 0;
+      border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      overflow: hidden;
     }
-    .drawer-body::-webkit-scrollbar { width: 4px; }
-    .drawer-body::-webkit-scrollbar-track { background: transparent; }
-    .drawer-body::-webkit-scrollbar-thumb { background: var(--subtle); border-radius: 2px; }
-
-    .drawer-footer {
-      padding: 20px 32px;
+    .modal-form {
+      flex: 1;
+      overflow-y: auto;
+      padding: 22px 22px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .modal-form::-webkit-scrollbar { width: 3px; }
+    .modal-form::-webkit-scrollbar-thumb { background: var(--subtle); border-radius: 2px; }
+    .modal-generate {
+      padding: 14px 22px 18px;
       border-top: 1px solid var(--border);
       flex-shrink: 0;
     }
 
+    /* Right pane — output */
+    .modal-right {
+      flex: 1;
+      overflow-y: auto;
+      padding: 22px 26px;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-right::-webkit-scrollbar { width: 3px; }
+    .modal-right::-webkit-scrollbar-thumb { background: var(--subtle); border-radius: 2px; }
+    .output-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 740px) {
+      .modal-body { flex-direction: column; }
+      .modal-left { width: 100%; border-right: none; border-bottom: 1px solid var(--border); max-height: 46vh; }
+      .modal { height: 96vh; border-radius: 14px; }
+    }
+
     /* ── Form fields ── */
-    .field-group { display: flex; flex-direction: column; gap: 7px; }
+    .field-group { display: flex; flex-direction: column; gap: 6px; }
     .field-label {
       font-size: 11px;
       font-weight: 700;
@@ -419,67 +467,67 @@
 
     input[type="text"], input[type="password"], select, textarea {
       width: 100%;
-      padding: 11px 14px;
+      padding: 10px 13px;
       background: rgba(255,255,255,0.04);
       border: 1px solid var(--border);
-      border-radius: 9px;
+      border-radius: 8px;
       color: var(--text);
       font-size: 13px;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Bricolage Grotesque', sans-serif;
       transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
       -webkit-appearance: none;
     }
     input:focus, select:focus, textarea:focus {
       outline: none;
       border-color: var(--border-active);
-      background: rgba(124,58,237,0.07);
-      box-shadow: 0 0 18px rgba(124,58,237,0.18);
+      background: rgba(222,19,72,0.05);
+      box-shadow: 0 0 0 3px rgba(222,19,72,0.1);
     }
-    textarea { min-height: 110px; resize: vertical; font-family: 'Bricolage Grotesque', sans-serif; font-size: 13px; }
-    select option { background: #1a1030; }
+    textarea { min-height: 120px; resize: vertical; font-family: 'Bricolage Grotesque', sans-serif; font-size: 13px; line-height: 1.5; }
+    select option { background: #0c0c12; }
 
     .btn-generate {
       width: 100%;
-      padding: 13px;
+      padding: 12px;
       font-size: 14px;
       font-weight: 700;
       color: #fff;
       background: var(--accent-dark);
-      border: 1px solid rgba(167,139,250,0.35);
+      border: 1px solid rgba(222,19,72,0.4);
       border-radius: 9px;
       cursor: pointer;
       transition: all 0.25s;
-      box-shadow: 0 0 28px rgba(124,58,237,0.4);
+      box-shadow: 0 0 24px rgba(222,19,72,0.3);
       position: relative;
       overflow: hidden;
+      font-family: 'Bricolage Grotesque', sans-serif;
     }
     .btn-generate::after {
       content: '';
       position: absolute; inset: 0;
-      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.12) 50%, transparent 100%);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
       transform: translateX(-150%);
       animation: sh 3s ease-in-out infinite;
     }
     @keyframes sh { 0%{transform:translateX(-150%)} 100%{transform:translateX(150%)} }
-    .btn-generate:hover { background: #6d28d9; transform: translateY(-1px); box-shadow: 0 6px 36px rgba(124,58,237,0.6); }
+    .btn-generate:hover { background: var(--accent); transform: translateY(-1px); box-shadow: 0 6px 28px rgba(222,19,72,0.5); }
     .btn-generate:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-    /* ── Output area ── */
-    .output-wrap { padding: 0 32px 24px; overflow-y: auto; flex: 1; }
-    .output-wrap::-webkit-scrollbar { width: 4px; }
-    .output-wrap::-webkit-scrollbar-thumb { background: var(--subtle); border-radius: 2px; }
-
+    /* ── Output ── */
     .output-empty {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100%;
-      min-height: 200px;
-      gap: 10px;
+      flex: 1;
+      min-height: 240px;
+      gap: 12px;
       color: var(--subtle);
       font-size: 14px;
+      text-align: center;
+      line-height: 1.6;
     }
+    .output-empty svg { opacity: 0.25; margin-bottom: 4px; }
     .loading-row {
       display: flex;
       align-items: center;
@@ -488,64 +536,41 @@
       font-size: 13px;
       padding: 20px 0;
     }
-    .spinner { width:18px; height:18px; border:2px solid rgba(167,139,250,0.2); border-top-color:var(--accent); border-radius:50%; animation:spin 0.75s linear infinite; }
+    .spinner { width:18px; height:18px; border:2px solid rgba(222,19,72,0.2); border-top-color:var(--accent); border-radius:50%; animation:spin 0.75s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .code-block {
-      background: rgba(0,0,0,0.45);
+      background: rgba(0,0,0,0.4);
       border: 1px solid rgba(255,255,255,0.07);
       border-radius: 10px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       overflow: hidden;
-      position: relative;
     }
     .code-block-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 9px 14px;
+      padding: 8px 14px;
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .code-block-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); }
     .copy-btn {
-      padding: 5px 11px;
-      background: rgba(124,58,237,0.15);
-      border: 1px solid rgba(167,139,250,0.25);
+      padding: 4px 11px;
+      background: rgba(222,19,72,0.1);
+      border: 1px solid rgba(222,19,72,0.25);
       border-radius: 5px;
       color: var(--accent);
       font-size: 11px;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.2s;
+      font-family: 'Bricolage Grotesque', sans-serif;
     }
-    .copy-btn:hover { background: rgba(124,58,237,0.35); }
+    .copy-btn:hover { background: rgba(222,19,72,0.25); }
     pre { margin:0; padding:14px 16px; font-size:12px; line-height:1.7; font-family:'JetBrains Mono',monospace; color:#cbd5e1; overflow-x:auto; white-space:pre-wrap; word-break:break-word; }
 
-    .error-box { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:9px; padding:13px 16px; color:#fca5a5; font-size:13px; }
+    .error-box { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:9px; padding:12px 16px; color:#fca5a5; font-size:13px; }
     .prose { color:var(--muted); font-size:13px; line-height:1.6; margin-bottom:10px; }
-
-    /* Tabs for form / output */
-    .drawer-tabs {
-      display: flex;
-      gap: 4px;
-      padding: 0 32px;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-    .tab {
-      padding: 12px 16px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--subtle);
-      border-bottom: 2px solid transparent;
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
-      bottom: -1px;
-    }
-    .tab.active { color: var(--text); border-bottom-color: var(--accent); }
-    .tab-panel { display: none; }
-    .tab-panel.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
   </style>
 </head>
 <body>
@@ -580,7 +605,7 @@
     </ul>
     <div class="nav-cta">
       <a href="https://docs.charli3.io" target="_blank" class="btn-ghost">Documentation</a>
-      <button class="btn-primary" onclick="openDrawer()">Open Generator</button>
+      <button class="btn-primary" onclick="openModal()">Open Generator</button>
     </div>
   </nav>
 
@@ -596,7 +621,7 @@
       <h1>Build oracle integrations<br><span class="highlight">in minutes, not hours.</span></h1>
       <p class="hero-sub">Describe your use case in plain English. Get production ready onchain validators, offchain integrations, and test suites ready to ship.</p>
       <div class="hero-actions">
-        <button class="btn-hero" onclick="openDrawer()">Open Generator</button>
+        <button class="btn-hero" onclick="openModal()">Open Generator</button>
         <a href="#what" class="btn-hero-outline">Learn More</a>
       </div>
     </section>
@@ -685,7 +710,7 @@
     <div class="cta-band">
       <h2>Ready to integrate?</h2>
       <p>Open the generator and have working oracle code in under two minutes.</p>
-      <button class="btn-hero" onclick="openDrawer()">Open Generator</button>
+      <button class="btn-hero" onclick="openModal()">Open Generator</button>
     </div>
 
     <!-- Footer -->
@@ -696,67 +721,90 @@
 
   </div>
 
-  <!-- Generator Drawer -->
-  <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
-  <div class="drawer" id="drawer">
-    <div class="drawer-header">
-      <span class="drawer-title">Orator — Oracle Code Generator</span>
-      <button class="drawer-close" onclick="closeDrawer()">&#x2715;</button>
-    </div>
+  <!-- Generator Modal -->
+  <div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+    <div class="modal" id="modal">
 
-    <div class="drawer-tabs">
-      <div class="tab active" onclick="showTab('form')">Configure</div>
-      <div class="tab" id="tab-output" onclick="showTab('output')">Output</div>
-    </div>
-
-    <!-- Form tab -->
-    <div class="tab-panel active" id="panel-form" style="overflow-y:auto; padding:28px 32px; gap:20px; display:flex; flex-direction:column;">
-
-      <div class="field-group">
-        <label class="field-label" for="useCase">Use Case</label>
-        <select id="useCase">
-          <option value="price-feed">Price Feed: Liquidations and Swaps</option>
-          <option value="prediction-market">Prediction Market: Real World Event Settlement</option>
-          <option value="flight-insurance">Flight Delay Insurance: Automatic Payouts</option>
-          <option value="yield-rebalancing">Yield Rebalancing: Auto DeFi Position Management</option>
-          <option value="sports-data">Sports Data: Tournament and Event Outcomes</option>
-          <option value="weather-trigger">Weather Trigger: Parametric Insurance Payouts</option>
-          <option value="carbon-credit">Carbon Credit: Environmental Data Settlement</option>
-          <option value="supply-chain">Supply Chain: Delivery Verification</option>
-          <option value="stablecoin">Stablecoin Peg: Stability Mechanism Trigger</option>
-          <option value="custom">Custom / Other</option>
-        </select>
+      <div class="modal-header">
+        <span class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="28" cy="28" r="24" stroke="#C8392B" stroke-width="2.5" stroke-dasharray="128 22" stroke-dashoffset="-8" fill="none" stroke-linecap="round"/>
+            <circle cx="28" cy="28" r="11" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+            <line x1="28" y1="17" x2="28" y2="39" stroke="#FF7A6A" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="28" y1="4" x2="28" y2="10" stroke="#FF7A6A" stroke-width="2" stroke-linecap="round"/>
+            <line x1="46" y1="14" x2="42.2" y2="16.2" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+            <line x1="46" y1="42" x2="42.2" y2="39.8" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+            <line x1="10" y1="14" x2="13.8" y2="16.2" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+            <line x1="10" y1="42" x2="13.8" y2="39.8" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+          </svg>
+          Oracle Code Generator
+        </span>
+        <button class="modal-close" onclick="closeModal()">&#x2715;</button>
       </div>
 
-      <div class="field-group">
-        <label class="field-label" for="assetPair">Asset / Data Feed</label>
-        <input type="text" id="assetPair" placeholder="e.g. ADA/USD, BTC/USD, Temperature">
-      </div>
+      <div class="modal-body">
 
-      <div class="field-group">
-        <label class="field-label" for="framework">Framework</label>
-        <select id="framework">
-          <option value="aiken">Aiken (Recommended)</option>
-          <option value="plutus">Plutus / Haskell</option>
-          <option value="either">Either — you decide</option>
-        </select>
-      </div>
+        <!-- Left pane: Form -->
+        <div class="modal-left">
+          <div class="modal-form">
 
-      <div class="field-group">
-        <label class="field-label" for="description">Describe What You Want to Build</label>
-        <textarea id="description" placeholder="Example: When ADA/USD drops below $0.50, trigger a liquidation. Pull the latest price from Charli3, compare to the user's collateral ratio, and auto-liquidate if below 120%."></textarea>
-      </div>
+            <div class="field-group">
+              <label class="field-label" for="useCase">Use Case</label>
+              <select id="useCase">
+                <option value="price-feed">Price Feed: Liquidations and Swaps</option>
+                <option value="prediction-market">Prediction Market: Real World Event Settlement</option>
+                <option value="flight-insurance">Flight Delay Insurance: Automatic Payouts</option>
+                <option value="yield-rebalancing">Yield Rebalancing: Auto DeFi Position Management</option>
+                <option value="sports-data">Sports Data: Tournament and Event Outcomes</option>
+                <option value="weather-trigger">Weather Trigger: Parametric Insurance Payouts</option>
+                <option value="carbon-credit">Carbon Credit: Environmental Data Settlement</option>
+                <option value="supply-chain">Supply Chain: Delivery Verification</option>
+                <option value="stablecoin">Stablecoin Peg: Stability Mechanism Trigger</option>
+                <option value="custom">Custom / Other</option>
+              </select>
+            </div>
 
-    </div>
+            <div class="field-group">
+              <label class="field-label" for="assetPair">Asset / Data Feed</label>
+              <input type="text" id="assetPair" placeholder="e.g. ADA/USD, BTC/USD, Temperature">
+            </div>
 
-    <div class="drawer-footer">
-      <button class="btn-generate" id="generateBtn" onclick="generate()">Generate Oracle Code</button>
-    </div>
+            <div class="field-group">
+              <label class="field-label" for="framework">Framework</label>
+              <select id="framework">
+                <option value="aiken">Aiken (Recommended)</option>
+                <option value="plutus">Plutus / Haskell</option>
+                <option value="either">Either — you decide</option>
+              </select>
+            </div>
 
-    <!-- Output tab -->
-    <div class="tab-panel" id="panel-output" style="overflow-y:auto; padding:24px 32px; flex:1; flex-direction:column;">
-      <div class="output-empty" id="output">
-        <span>Output will appear here after generation</span>
+            <div class="field-group">
+              <label class="field-label" for="description">Describe What You Want to Build</label>
+              <textarea id="description" placeholder="Example: When ADA/USD drops below $0.50, trigger a liquidation. Pull the latest price from Charli3, compare to the user's collateral ratio, and auto-liquidate if below 120%."></textarea>
+            </div>
+
+          </div>
+          <div class="modal-generate">
+            <button class="btn-generate" id="generateBtn" onclick="generate()">Generate Oracle Code</button>
+          </div>
+        </div>
+
+        <!-- Right pane: Output -->
+        <div class="modal-right">
+          <div class="output-label" id="outputLabel">Generated Code</div>
+          <div id="output">
+            <div class="output-empty">
+              <svg width="44" height="44" viewBox="0 0 56 56" fill="none">
+                <circle cx="28" cy="28" r="24" stroke="currentColor" stroke-width="2" stroke-dasharray="128 22" stroke-dashoffset="-8" fill="none" stroke-linecap="round"/>
+                <circle cx="28" cy="28" r="11" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                <line x1="28" y1="17" x2="28" y2="39" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <line x1="28" y1="4" x2="28" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <span>Configure your oracle use case<br>on the left, then hit Generate</span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -764,24 +812,18 @@
   <script>
     // API calls go through /api/generate (serverless proxy — key lives in Vercel env vars)
 
-    function openDrawer() {
-      document.getElementById('overlay').classList.add('open');
-      document.getElementById('drawer').classList.add('open');
+    function openModal() {
+      document.getElementById('modalOverlay').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
 
-    function closeDrawer() {
-      document.getElementById('overlay').classList.remove('open');
-      document.getElementById('drawer').classList.remove('open');
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('open');
       document.body.style.overflow = '';
     }
 
-    function showTab(tab) {
-      document.querySelectorAll('.tab').forEach((t, i) => {
-        t.classList.toggle('active', (i === 0 && tab === 'form') || (i === 1 && tab === 'output'));
-      });
-      document.getElementById('panel-form').classList.toggle('active', tab === 'form');
-      document.getElementById('panel-output').classList.toggle('active', tab === 'output');
+    function handleOverlayClick(e) {
+      if (e.target === document.getElementById('modalOverlay')) closeModal();
     }
 
     async function generate() {
@@ -793,15 +835,14 @@
       const btn  = document.getElementById('generateBtn');
 
       if (!ap || !desc) {
-        showTab('form');
         alert('Please fill in Asset / Data Feed and Description.');
         return;
       }
 
       btn.disabled = true;
       btn.textContent = 'Generating…';
-      showTab('output');
       out.innerHTML = '<div class="loading-row"><div class="spinner"></div><span>Generating oracle code…</span></div>';
+      document.getElementById('modalOverlay').querySelector('.modal-right').scrollTop = 0;
 
       const system = `You are an expert Cardano oracle integration developer specialising in Charli3 pull oracles.
 
@@ -872,9 +913,7 @@ Each block must be complete and immediately runnable. No prose outside the code 
       }
 
       container.innerHTML = html || `<pre>${esc(text)}</pre>`;
-
-      // update tab indicator
-      document.getElementById('tab-output').textContent = 'Output  ' + labels.slice(0, si).length;
+      document.getElementById('outputLabel').textContent = si > 0 ? `Generated Code — ${si} block${si > 1 ? 's' : ''}` : 'Generated Code';
     }
 
     function esc(s) {
@@ -890,7 +929,7 @@ Each block must be complete and immediately runnable. No prose outside the code 
     }
 
     // Close drawer on Escape
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
   </script>
 </body>
 </html>
