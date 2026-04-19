@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orator Docs — Oracle Code Generator</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56'%3E%3Ccircle cx='28' cy='28' r='24' stroke='%23C8392B' stroke-width='3' stroke-dasharray='128 22' stroke-dashoffset='-8' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='28' cy='28' r='11' fill='none' stroke='%231A1410' stroke-width='2.5'/%3E%3Cline x1='28' y1='17' x2='28' y2='39' stroke='%23C8392B' stroke-width='3' stroke-linecap='round'/%3E%3Cline x1='28' y1='4' x2='28' y2='10' stroke='%23C8392B' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #06060A;
+      --surface: rgba(255,255,255,0.04);
+      --surface-hover: rgba(255,255,255,0.07);
+      --border: rgba(255,255,255,0.07);
+      --text: #f1f5f9;
+      --muted: #64748b;
+      --subtle: #334155;
+      --accent: #DE1348;
+      --accent-light: #FF3366;
+      --accent-dark: #B50D38;
+      --accent-dim: rgba(222,19,72,0.1);
+      --sidebar-w: 260px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Top nav ── */
+    .topnav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      background: rgba(6,6,10,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo svg { flex-shrink: 0; }
+    .nav-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid rgba(222,19,72,0.25);
+      border-radius: 4px;
+      padding: 2px 7px;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .nav-right a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-right a:hover { color: var(--text); }
+    .btn-launch {
+      padding: 7px 16px;
+      background: var(--accent-dark);
+      border: 1px solid rgba(222,19,72,0.35);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+      font-family: 'Bricolage Grotesque', sans-serif;
+    }
+    .btn-launch:hover { background: var(--accent); }
+
+    /* ── Layout ── */
+    .layout {
+      display: flex;
+      padding-top: 56px;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      width: var(--sidebar-w);
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+      padding: 28px 0 40px;
+      border-right: 1px solid var(--border);
+    }
+    .sidebar::-webkit-scrollbar { width: 3px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--subtle); border-radius: 2px; }
+
+    .sidebar-section {
+      margin-bottom: 28px;
+      padding: 0 20px;
+    }
+    .sidebar-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+      padding-left: 8px;
+    }
+    .sidebar-link {
+      display: block;
+      padding: 6px 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.15s;
+      margin-bottom: 1px;
+    }
+    .sidebar-link:hover { color: var(--text); background: var(--surface-hover); }
+    .sidebar-link.active { color: var(--text); background: var(--accent-dim); }
+
+    /* ── Main content ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      padding: 56px 64px 100px;
+      max-width: 860px;
+    }
+
+    /* ── Typography ── */
+    .doc-section {
+      margin-bottom: 72px;
+      scroll-margin-top: 80px;
+    }
+    .doc-section h1 {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .doc-section h2 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      margin-bottom: 12px;
+      margin-top: 40px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .doc-section h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      margin-top: 24px;
+      color: var(--text);
+    }
+    .doc-section p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: #94a3b8;
+      margin-bottom: 14px;
+    }
+    .doc-section p strong { color: var(--text); font-weight: 600; }
+    .doc-section ul, .doc-section ol {
+      padding-left: 20px;
+      margin-bottom: 14px;
+    }
+    .doc-section li {
+      font-size: 15px;
+      line-height: 1.75;
+      color: #94a3b8;
+      margin-bottom: 4px;
+    }
+    .doc-section li strong { color: var(--text); }
+
+    .lead {
+      font-size: 17px;
+      line-height: 1.7;
+      color: #94a3b8;
+      margin-bottom: 32px;
+    }
+
+    /* ── Divider ── */
+    .doc-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 48px 0;
+    }
+
+    /* ── Callout boxes ── */
+    .callout {
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+    .callout-info {
+      background: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.2);
+      color: #93c5fd;
+    }
+    .callout-warn {
+      background: rgba(234,179,8,0.08);
+      border: 1px solid rgba(234,179,8,0.2);
+      color: #fde68a;
+    }
+    .callout-tip {
+      background: var(--accent-dim);
+      border: 1px solid rgba(222,19,72,0.2);
+      color: #fda4af;
+    }
+    .callout strong { display: block; margin-bottom: 4px; font-weight: 700; }
+
+    /* ── Code ── */
+    .code-block {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .code-block-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .code-lang {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .copy-btn {
+      padding: 3px 10px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(222,19,72,0.25);
+      border-radius: 4px;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: 'Bricolage Grotesque', sans-serif;
+    }
+    .copy-btn:hover { background: rgba(222,19,72,0.2); }
+    pre {
+      margin: 0;
+      padding: 16px 18px;
+      font-size: 13px;
+      line-height: 1.7;
+      font-family: 'JetBrains Mono', monospace;
+      color: #cbd5e1;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 1px 6px;
+      color: #e2e8f0;
+    }
+
+    /* ── Step list ── */
+    .step-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
+    .step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1px solid rgba(222,19,72,0.3);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-body h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .step-body p { font-size: 14px; color: var(--muted); margin: 0; }
+
+    /* ── Output blocks preview ── */
+    .output-preview {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .output-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .output-card-num {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .output-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+    .output-card p { font-size: 12px; color: var(--muted); line-height: 1.5; margin: 0; }
+
+    /* ── Use case table ── */
+    .uc-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 24px;
+      font-size: 14px;
+    }
+    .uc-table th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .uc-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: #94a3b8;
+      vertical-align: top;
+    }
+    .uc-table td:first-child { color: var(--text); font-weight: 500; }
+    .uc-table tr:last-child td { border-bottom: none; }
+
+    /* ── FAQ ── */
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    .faq-q {
+      padding: 16px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .faq-q:hover { background: var(--surface-hover); }
+    .faq-q .arrow { color: var(--accent); font-size: 12px; transition: transform 0.2s; }
+    .faq-item.open .faq-q .arrow { transform: rotate(180deg); }
+    .faq-a {
+      display: none;
+      padding: 0 18px 16px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+    .faq-item.open .faq-a { display: block; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding: 36px 24px 80px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top nav -->
+  <nav class="topnav">
+    <a href="/" class="nav-logo">
+      <svg width="24" height="24" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="28" cy="28" r="24" stroke="#C8392B" stroke-width="2.5" stroke-dasharray="128 22" stroke-dashoffset="-8" fill="none" stroke-linecap="round"/>
+        <circle cx="28" cy="28" r="11" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+        <line x1="28" y1="17" x2="28" y2="39" stroke="#FF7A6A" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="28" y1="4" x2="28" y2="10" stroke="#FF7A6A" stroke-width="2" stroke-linecap="round"/>
+        <line x1="46" y1="14" x2="42.2" y2="16.2" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+        <line x1="46" y1="42" x2="42.2" y2="39.8" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+        <line x1="10" y1="14" x2="13.8" y2="16.2" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+        <line x1="10" y1="42" x2="13.8" y2="39.8" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+      </svg>
+      Orator
+      <span class="nav-badge">Docs</span>
+    </a>
+    <div class="nav-right">
+      <a href="/">Home</a>
+      <a href="https://github.com/IamHarrie-Labs/orator" target="_blank">GitHub</a>
+      <a href="/" class="btn-launch" onclick="sessionStorage.setItem('openGenerator','1')">Open Generator →</a>
+    </div>
+  </nav>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Getting Started</div>
+        <a href="#what-is-orator" class="sidebar-link active">What is Orator?</a>
+        <a href="#quickstart" class="sidebar-link">Quick Start</a>
+        <a href="#how-it-works" class="sidebar-link">How It Works</a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Using the Generator</div>
+        <a href="#use-cases" class="sidebar-link">Use Cases</a>
+        <a href="#form-fields" class="sidebar-link">Form Fields</a>
+        <a href="#output" class="sidebar-link">Understanding Output</a>
+        <a href="#copy-deploy" class="sidebar-link">Copy &amp; Deploy</a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Reference</div>
+        <a href="#oracle-basics" class="sidebar-link">Oracle Basics</a>
+        <a href="#charli3-model" class="sidebar-link">Charli3 Pull Model</a>
+        <a href="#trust" class="sidebar-link">Trusting Generated Code</a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">More</div>
+        <a href="#faq" class="sidebar-link">FAQ</a>
+        <a href="#roadmap" class="sidebar-link">Roadmap</a>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+
+      <!-- ── What is Orator ── -->
+      <section class="doc-section" id="what-is-orator">
+        <h1>What is Orator?</h1>
+        <p class="lead">Orator is an AI-powered code generator for Charli3 pull oracles on Cardano. Describe your oracle use case in plain English — get production-ready on-chain validators, off-chain integrations, and test suites in seconds.</p>
+
+        <div class="callout callout-tip">
+          <strong>The core idea</strong>
+          Writing a Charli3 oracle integration from scratch takes days — you need to know Aiken or Plutus, understand the SDK, handle timestamp validation, fee estimation, and proof verification. Orator handles all of that from a single sentence.
+        </div>
+
+        <h2>Why it exists</h2>
+        <p>Charli3 is Cardano's native oracle network — but integrating with it requires deep protocol knowledge. Most developers who want to build DeFi liquidators, parametric insurance contracts, or prediction markets get blocked at the oracle layer before they've written a line of application logic.</p>
+        <p>Orator removes that blocker. You describe what you want to build, and Orator generates the entire oracle integration — correctly structured, with all the patterns Charli3 requires baked in.</p>
+
+        <h2>What Orator is not</h2>
+        <ul>
+          <li>It is <strong>not a deployment tool</strong> — it generates code, you deploy it.</li>
+          <li>It is <strong>not a replacement for code review</strong> — always read and test generated output before deploying to mainnet.</li>
+          <li>It is <strong>not a Charli3 node</strong> — it generates the client-side integration code that talks to the Charli3 network.</li>
+        </ul>
+      </section>
+
+      <hr class="doc-divider">
+
+      <!-- ── Quick Start ── -->
+      <section class="doc-section" id="quickstart">
+        <h1>Quick Start</h1>
+        <p class="lead">Generate your first oracle integration in under two minutes.</p>
+
+        <div class="step-list">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Open the Generator</h4>
+              <p>Click <strong>Open Generator</strong> from the homepage. The generator modal opens with the form on the left and output on the right.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Select a Use Case</h4>
+              <p>Pick from 9 built-in templates (DeFi liquidation, flight insurance, yield rebalancing, etc.) or choose <strong>Custom / Other</strong> to describe your own.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Fill in the Asset and Description</h4>
+              <p>Enter the data feed (e.g. <code>ADA/USD</code>, <code>BTC/USD</code>, <code>Temperature</code>) and write a plain-English description of your contract logic.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <h4>Choose your Framework</h4>
+              <p>Select <strong>Aiken</strong> (recommended for new projects), <strong>Plutus / Haskell</strong>, or let the AI decide.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">5</div>
+            <div class="step-body">
+              <h4>Generate &amp; Copy</h4>
+              <p>Hit <strong>Generate Oracle Code</strong>. Three code blocks appear — copy each one into your project with the Copy button.</p>
+            </div>
+          </div>
+        </div>
+
+        <h2>Example prompt</h2>
+        <div class="code-block">
+          <div class="code-block-top">
+            <span class="code-lang">Description field</span>
+          </div>
+          <pre>A lending protocol that liquidates collateral when ADA/USD drops
+below $0.50. Pull the price from Charli3, validate the oracle
+timestamp is within 60 seconds, and trigger liquidation if the
+user's collateral ratio falls below 120%.</pre>
+        </div>
+      </section>
+
+      <hr class="doc-divider">
+
+      <!-- ── How It Works ── -->
+      <section class="doc-section" id="how-it-works">
+        <h1>How It Works</h1>
+        <p>Orator sends your use case description to a large language model (LLaMA 3.3 70B via Groq) with a detailed system prompt encoding the exact mechanics of Charli3 pull oracles. The API key is stored server-side — your browser never touches it.</p>
+
+        <div class="code-block">
+          <div class="code-block-top"><span class="code-lang">Request flow</span></div>
+          <pre>Browser → POST /api/generate → Vercel serverless function
+       → Groq API (LLaMA 3.3 70B)
+       → Returns: 3 fenced code blocks
+       → Browser renders with Copy buttons</pre>
+        </div>
+
+        <h2>What the AI knows about Charli3</h2>
+        <p>The system prompt encodes these Charli3-specific facts so the generated code is always correct:</p>
+        <ul>
+          <li><strong>Pull model</strong> — contract submits an on-chain request; oracle nodes respond with signed data</li>
+          <li><strong>Response payload</strong> — price/data + Unix timestamp + multi-node Ed25519 signature proof</li>
+          <li><strong>Fee</strong> — 2–5 ADA per pull depending on freshness SLA</li>
+          <li><strong>SDK</strong> — <code>charli3-pull-oracle-sdk</code> handles request building, fee estimation, response parsing</li>
+          <li><strong>Staleness rule</strong> — reject oracle responses older than 60 seconds</li>
+          <li><strong>Timeout pattern</strong> — if no oracle response within 5 minutes, trigger a refund path</li>
+        </ul>
+      </section>
+
+      <hr class="doc-divider">
+
+      <!-- ── Use Cases ── -->
+      <section class="doc-section" id="use-cases">
+        <h1>Use Cases</h1>
+        <p>Orator ships with 9 built-in use case templates, each pre-configured with relevant oracle patterns:</p>
+
+        <table class="uc-table">
+          <thead>
+            <tr>
+              <th>Use Case</th>
+              <th>What it generates</th>
+              <th>Typical data feed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Price Feed: Liquidations &amp; Swaps</td>
+              <td>Collateral ratio validator, liquidation trigger, swap gate</td>
+              <td>ADA/USD, BTC/USD, ETH/USD</td>
+            </tr>
+            <tr>
+              <td>Prediction Market</td>
+              <td>Binary market settlement validator, expiry handler</td>
+              <td>Any price pair or event outcome</td>
+            </tr>
+            <tr>
+              <td>Flight Delay Insurance</td>
+              <td>Parametric payout validator, delay threshold checker</td>
+              <td>Flight status feed</td>
+            </tr>
+            <tr>
+              <td>Yield Rebalancing</td>
+              <td>APY comparator, rebalance trigger, slippage guard</td>
+              <td>Pool APY feeds</td>
+            </tr>
+            <tr>
+              <td>Sports Data</td>
+              <td>Event outcome validator, result-gated payout</td>
+              <td>Match result feed</td>
+            </tr>
+            <tr>
+              <td>Weather Trigger</td>
+              <td>Threshold validator (rainfall, temperature), payout logic</td>
+              <td>Weather data feed</td>
+            </tr>
+            <tr>
+              <td>Carbon Credit</td>
+              <td>Environmental data validator, settlement trigger</td>
+              <td>Carbon price / emissions data</td>
+            </tr>
+            <tr>
+              <td>Supply Chain</td>
+              <td>Delivery confirmation validator, milestone-gated release</td>
+              <td>Shipment status feed</td>
+            </tr>
+            <tr>
+              <td>Stablecoin Peg</td>
+              <td>Peg deviation monitor, mint/burn pause trigger</td>
+              <td>Stablecoin/USD feed</td>
+            </tr>
+            <tr>
+              <td>Custom / Other</td>
+              <td>Fully described by your input</td>
+              <td>Any feed you specify</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-info">
+          <strong>Custom use cases</strong>
+          Select <strong>Custom / Other</strong> and write a detailed description. The more specific you are about thresholds, conditions, and payout logic, the more precise the generated code will be.
+        </div>
+      </section>
+
+      <hr class="doc-divider">
+
+      <!-- ── Form Fields ── -->
+      <section class="doc-section" id="form-fields">
+        <h1>Form Fields</h1>
+
+        <h3>Use Case</h3>
+        <p>Selects the oracle pattern category. This steers the AI toward the correct validator structure for your use case. If nothing fits, use <strong>Custom / Other</strong>.</p>
+
+        <h3>Asset / Data Feed</h3>
+        <p>The specific data you want to pull from Charli3. Examples:</p>
+        <ul>
+          <li><code>ADA/USD</code> — ADA price in US dollars</li>
+          <li><code>BTC/USD</code> — Bitcoin price</li>
+          <li><code>ETH/ADA</code> — cross-pair</li>
+          <li><code>Temperature</code> — weather data</li>
+          <li><code>Flight AA123</code> — flight status</li>
+        </ul>
+
+        <h3>Framework</h3>
+        <p><strong>Aiken</strong> is recommended for new projects — it's the modern, purpose-built language for Cardano validators with a clean syntax and fast compiler. <strong>Plutus / Haskell</strong> is for teams already working in Haskell. <strong>Either — you decide</strong> lets the AI choose based on your description.</p>
+
+        <h3>Description</h3>
+        <p>Plain-English description of what your contract should do. Include:</p>
+        <ul>
+          <li>The condition (e.g. "when price drops below X")</li>
+          <li>The action (e.g. "trigger liquidation", "pay out insurance")</li>
+          <li>Any thresholds, ratios, or time windows</li>
+          <li>Who the payout goes to (if relevant)</li>
+        </ul>
+      </section>
+
+      <hr class="doc-divider">
+
+      <!-- ── Understanding Output ── -->
+      <section class="doc-section" id="output">
+        <h1>Understanding the Output</h1>
+        <p>Every generation produces exactly three code blocks:</p>
+
+        <div class="output-preview">
+          <div class="output-card">
+            <div class="output-card-num">Block 01</div>
+            <h4>On-Chain Validator</h4>
+            <p>The smart contract in Aiken or Plutus/Haskell. Handles oracle proof verification, timestamp validation, and your core business logic.</p>
+          </div>
+          <div class="output-card">
+            <div class="output-card-num">Block 02</div>
+            <h4>Off-Chain Integration</h4>
+            <p>TypeScript using Mesh.js + Charli3 SDK. Builds the oracle request transaction, estimates fees, and submits to the network.</p>
+          </div>
+          <div class="output-card">
+            <div class="output-card-num">Block 03</div>
+            <h4>Test Suite</h4>
+            <p>TypeScript test with a mock oracle response. Lets you verify the validator logic locally before spending ADA on-chain.</p>
+          </div>
+        </div>
+
+        <h2>What's always included</h2>
+        <p>Regardless of use case, every generated validator includes:</p>
+        <ul>
+          <li><strong>Timestamp validation</strong> — rejects oracle data older than 60 seconds</li>
+          <li><strong>Fee estimation</strong> — calculates and attaches the correct 2–5 ADA oracle fee</li>
+          <li><strong>Timeout handling</strong> — refund path if no oracle response within 5 minutes</li>
+          <li><strong>Multi-node proof verification</strong> — confirms the oracle response is signed by the required number of Charli3 nodes</li>
+          <li><strong>Inline comments</strong> — every non-obvious line is explained</li>
+        </ul>
+      </section>
+
+      <hr class="doc-divider">
+
+      <!-- ── Copy & Deploy ── -->
+      <section class="doc-section" id="copy-deploy">
+        <h1>Copy &amp; Deploy</h1>
+
+        <h2>Copying the code</h2>
+        <p>Each code block has a <strong>Copy</strong> button in the top-right corner. Click it to copy the full block to your clipboard. The button briefly shows <em>Copied</em> to confirm.</p>
+
+        <h2>Deploying to Cardano Preprod (testnet)</h2>
+        <div class="step-list">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Set up an Aiken project</h4>
+              <p>Run <code>aiken new my-oracle-project</code> and paste Block 01 into your <code>validators/</code> directory.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Install dependencies</h4>
+              <p>Run <code>npm install @meshsdk/core charli3-pull-oracle-sdk</code> and paste Block 02 into your off-chain TypeScript.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Run the tests first</h4>
+              <p>Paste Block 03 into your test file and run <code>npm test</code>. Do not deploy until all tests pass.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <h4>Deploy to Preprod</h4>
+              <p>Use <code>aiken build</code> to compile the validator, then submit with Mesh.js pointing at a Preprod node. Get free test ADA from the <a href="https://docs.cardano.org/cardano-testnets/tools/faucet/" target="_blank" style="color:var(--accent);">Cardano faucet</a>.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-warn">
+          <strong>Always test on Preprod first</strong>
+          Never deploy generated code directly to Cardano mainnet. Run the test suite, deploy to Preprod, exercise the oracle flow end-to-end, and audit the validator logic before mainnet deployment.
+        </div>
+      </section>
+
+      <hr class="doc-divider">
+
+      <!-- ── Oracle Basics ── -->
+      <section class="doc-section" id="oracle-basics">
+        <h1>Oracle Basics</h1>
+        <p>Blockchains are intentionally isolated — a smart contract cannot fetch data from the internet. This is what makes them trustless and tamper-proof. But it creates a fundamental limitation: contracts cannot act on real-world events without a trusted data bridge.</p>
+        <p>An <strong>oracle</strong> is that bridge. It fetches real-world data (prices, weather, sports scores, flight statuses), verifies it through consensus, and posts it on-chain in a format smart contracts can read and trust.</p>
+
+        <h2>Without oracles</h2>
+        <ul>
+          <li>A DeFi lending protocol cannot liquidate undercollateralised positions — it can't know the asset price.</li>
+          <li>A stablecoin cannot maintain its peg — it can't verify its own price.</li>
+          <li>A parametric insurance contract cannot pay out — it can't verify the triggering event happened.</li>
+          <li>A prediction market cannot settle — it can't verify the real-world outcome.</li>
+        </ul>
+        <p>Oracles are what make any real-world connected DeFi primitive possible.</p>
+      </section>
+
+      <hr class="doc-divider">
+
+      <!-- ── Charli3 Pull Model ── -->
+      <section class="doc-section" id="charli3-model">
+        <h1>Charli3 Pull Model</h1>
+        <p>Charli3 is Cardano's native oracle network. Unlike push oracles that post data on-chain continuously, Charli3 uses a <strong>pull model</strong> — data is fetched on demand, when your contract requests it.</p>
+
+        <h2>How a pull works</h2>
+        <div class="code-block">
+          <div class="code-block-top"><span class="code-lang">Pull oracle flow</span></div>
+          <pre>1. Your contract submits an on-chain oracle request + fee (2–5 ADA)
+2. Charli3 nodes detect the request
+3. Each node fetches the data independently from multiple sources
+4. Nodes sign their responses with Ed25519 keys
+5. Nodes reach IQR consensus on the value
+6. A signed aggregate response is posted on-chain
+7. Your contract reads and verifies the proof
+8. Your contract executes its logic based on the verified data</pre>
+        </div>
+
+        <h2>Key properties</h2>
+        <ul>
+          <li><strong>On-demand</strong> — you only pay when you actually need data</li>
+          <li><strong>Multi-node signed</strong> — requires consensus from multiple independent nodes, so no single point of failure or manipulation</li>
+          <li><strong>Timestamp-bound</strong> — every response includes a Unix timestamp; stale data (over 60 seconds) should be rejected</li>
+          <li><strong>Fee: 2–5 ADA per pull</strong> — exact amount depends on the freshness SLA you request</li>
+          <li><strong>Timeout-safe</strong> — if no response within 5 minutes, your contract should provide a refund path</li>
+        </ul>
+      </section>
+
+      <hr class="doc-divider">
+
+      <!-- ── Trusting Generated Code ── -->
+      <section class="doc-section" id="trust">
+        <h1>Trusting Generated Code</h1>
+
+        <div class="callout callout-tip">
+          <strong>Short answer</strong>
+          The same way you trust any AI-generated code — you read it, run the tests, and review it before deploying. Orator gives you a correct starting point, not a black box.
+        </div>
+
+        <h2>Why the output is trustworthy as a starting point</h2>
+        <ul>
+          <li><strong>Fully transparent</strong> — every line is visible and readable. Nothing is hidden or compiled.</li>
+          <li><strong>Grounded in Charli3 mechanics</strong> — the AI is given precise, verified facts about the protocol (fees, timestamp rules, proof format, SDK methods) before it generates anything.</li>
+          <li><strong>Tests are included</strong> — a test suite ships with every generation specifically so you can verify behaviour before deployment.</li>
+          <li><strong>Inline comments</strong> — every non-obvious decision in the code is explained so reviewers know why each pattern was used.</li>
+        </ul>
+
+        <h2>Your responsibilities before deploying</h2>
+        <ul>
+          <li>Read all three generated blocks — understand what each line does.</li>
+          <li>Run the test suite — ensure the mock oracle flow passes.</li>
+          <li>Deploy to Preprod first — exercise the full oracle request/response cycle on testnet.</li>
+          <li>Audit your business logic — Orator handles oracle plumbing; you are responsible for your contract's economic logic.</li>
+          <li>Security review — for high-value contracts, engage a Cardano smart contract auditor before mainnet.</li>
+        </ul>
+
+        <div class="callout callout-warn">
+          <strong>Never deploy to mainnet without testing</strong>
+          Oracle bugs can be catastrophic — wrong price data triggering mass liquidations, stale data allowing double-claims, missing timeout paths locking funds. Always test end-to-end on Preprod first.
+        </div>
+      </section>
+
+      <hr class="doc-divider">
+
+      <!-- ── FAQ ── -->
+      <section class="doc-section" id="faq">
+        <h1>FAQ</h1>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Is Orator free to use?
+            <span class="arrow">▼</span>
+          </div>
+          <div class="faq-a">Yes. Orator is completely free. The underlying LLM (LLaMA 3.3 70B via Groq) is served through a serverless proxy — you don't need an API key or account to generate code.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            What framework should I choose — Aiken or Plutus?
+            <span class="arrow">▼</span>
+          </div>
+          <div class="faq-a">Choose <strong>Aiken</strong> unless you have a specific reason not to. Aiken is purpose-built for Cardano, has a significantly friendlier syntax, compiles faster, and has better tooling for new projects. Plutus/Haskell is preferable only if your team is already working in an existing Haskell codebase.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Can I use the generated code commercially?
+            <span class="arrow">▼</span>
+          </div>
+          <div class="faq-a">Yes. There are no restrictions on how you use generated code. It's yours to modify, deploy, and build products on. Orator itself is MIT licensed.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            The generated code has a bug. What do I do?
+            <span class="arrow">▼</span>
+          </div>
+          <div class="faq-a">Generate again with a more specific description — the more detail you provide about thresholds, edge cases, and conditions, the more precise the output. You can also modify the generated code directly; it's standard Aiken/TypeScript with comments explaining each section.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Does Orator actually submit transactions to Cardano?
+            <span class="arrow">▼</span>
+          </div>
+          <div class="faq-a">No. Orator generates code — it does not execute it. All on-chain activity happens when you take the generated code, deploy it yourself using Aiken and Mesh.js, and run your own transactions. Orator has no wallet integration and never touches your ADA.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            What data feeds does Charli3 support?
+            <span class="arrow">▼</span>
+          </div>
+          <div class="faq-a">Charli3 supports a growing range of price pairs (ADA/USD, BTC/USD, ETH/USD, and more), as well as custom data feeds. Check the official Charli3 documentation for the full current list of supported feeds and their feed IDs.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Is my description sent anywhere other than Groq?
+            <span class="arrow">▼</span>
+          </div>
+          <div class="faq-a">Your input is sent to Groq's API (running LLaMA 3.3 70B) via a Vercel serverless function. It is not logged, stored, or used for training by Orator. Refer to Groq's privacy policy for their data handling terms.</div>
+        </div>
+      </section>
+
+      <hr class="doc-divider">
+
+      <!-- ── Roadmap ── -->
+      <section class="doc-section" id="roadmap">
+        <h1>Roadmap</h1>
+        <p>Planned improvements and future integrations:</p>
+
+        <h2>Near-term</h2>
+        <ul>
+          <li><strong>One-click Preprod deployment</strong> — connect a wallet and deploy directly from the generator UI without touching a terminal.</li>
+          <li><strong>Project scaffolding</strong> — generate a full Aiken project folder (aiken.toml, directory structure, package.json) instead of individual code blocks.</li>
+          <li><strong>VS Code extension</strong> — describe your oracle integration in a comment, get the code inserted inline.</li>
+        </ul>
+
+        <h2>Medium-term</h2>
+        <ul>
+          <li><strong>Multi-oracle support</strong> — generate integrations for Orcfax and DIA alongside Charli3.</li>
+          <li><strong>Prompt-to-audit</strong> — paste your existing oracle integration and get a security review identifying common vulnerabilities.</li>
+          <li><strong>Community template library</strong> — verified, production-used oracle patterns contributed by the Cardano developer community.</li>
+        </ul>
+
+        <h2>Long-term</h2>
+        <ul>
+          <li><strong>AI agent integration</strong> — plug Orator into Masumi and other Cardano AI agent frameworks so autonomous agents can request oracle integrations programmatically.</li>
+          <li><strong>Oracle monitoring dashboard</strong> — track live oracle integrations, feed freshness, pull costs, and response time after deployment.</li>
+          <li><strong>Cross-chain generation</strong> — apply the same model to Ethereum (Chainlink), Solana (Pyth), and other oracle networks.</li>
+        </ul>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    function toggleFaq(el) {
+      el.closest('.faq-item').classList.toggle('open');
+    }
+
+    // Highlight active sidebar link on scroll
+    const sections = document.querySelectorAll('.doc-section');
+    const links = document.querySelectorAll('.sidebar-link');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const active = document.querySelector(`.sidebar-link[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+
+    // Copy buttons
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const code = btn.closest('.code-block').querySelector('pre').innerText;
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = 'Copied';
+          setTimeout(() => btn.textContent = 'Copy', 2000);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
